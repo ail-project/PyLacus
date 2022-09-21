@@ -1,18 +1,18 @@
-# Python client and module for Project Template
+# Python client and module for Lacus
 
-This is a simple template used in all the web based APIs in this repository, and a few others.
+Use this module to interact with a [Lacus](https://github.com/ail-project/lacus) instance.
 
 ## Installation
 
 ```bash
-pip install pyproject
+pip install pylacus
 ```
 
 ## Usage
 
 ### Command line
 
-You can use the `client` command to do a thing:
+You can use the `lacus` command:
 
 ```bash
 ```
