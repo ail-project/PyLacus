@@ -33,9 +33,9 @@ def main():
     elif args.command == 'enqueue':
         response = client.enqueue({'url': args.url})
     elif args.command == 'status':
-        response = client.capture_status(args.uuid)
+        response = client.get_capture_status(args.uuid)
     elif args.command == 'result':
-        response = client.capture_result(args.uuid, decode=False)
+        response = client.get_capture(args.uuid, decode=False)
     else:
         response = "Invalid request"
 

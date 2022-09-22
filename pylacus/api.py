@@ -9,6 +9,8 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+BROWSER = Literal['chromium', 'firefox', 'webkit']
+
 
 @unique
 class CaptureStatus(IntEnum):
@@ -84,7 +86,10 @@ class PyLacus():
     @property
     def is_up(self) -> bool:
         '''Test if the given instance is accessible'''
-        r = self.session.head(self.root_url)
+        try:
+            r = self.session.head(self.root_url)
+        except requests.exceptions.ConnectionError:
+            return False
         return r.status_code == 200
 
     def redis_up(self) -> Dict:
@@ -92,11 +97,87 @@ class PyLacus():
         r = self.session.get(urljoin(self.root_url, 'redis_up'))
         return r.json()
 
-    def enqueue(self, settings: CaptureSettings) -> str:
-        r = self.session.post(urljoin(self.root_url, 'enqueue'), json=settings)
+    @overload
+    def enqueue(self, *, settings: Optional[CaptureSettings]=None) -> str:
+        ...
+
+    @overload
+    def enqueue(self, *,
+                url: Optional[str]=None,
+                document_name: Optional[str]=None, document: Optional[str]=None,
+                depth: int=0,
+                browser: Optional[BROWSER]=None, device_name: Optional[str]=None,
+                user_agent: Optional[str]=None,
+                proxy: Optional[Union[str, Dict[str, str]]]=None,
+                general_timeout_in_sec: Optional[int]=None,
+                cookies: Optional[List[Dict[str, Any]]]=None,
+                headers: Optional[Union[str, Dict[str, str]]]=None,
+                http_credentials: Optional[Dict[str, int]]=None,
+                viewport: Optional[Dict[str, int]]=None,
+                referer: Optional[str]=None,
+                rendered_hostname_only: bool=True,
+                force: bool=False,
+                recapture_interval: int=300,
+                priority: int=0
+                ) -> str:
+        ...
+
+    def enqueue(self, *,
+                settings: Optional[CaptureSettings]=None,
+                url: Optional[str]=None,
+                document_name: Optional[str]=None, document: Optional[str]=None,
+                depth: int=0,
+                browser: Optional[BROWSER]=None, device_name: Optional[str]=None,
+                user_agent: Optional[str]=None,
+                proxy: Optional[Union[str, Dict[str, str]]]=None,
+                general_timeout_in_sec: Optional[int]=None,
+                cookies: Optional[List[Dict[str, Any]]]=None,
+                headers: Optional[Union[str, Dict[str, str]]]=None,
+                http_credentials: Optional[Dict[str, int]]=None,
+                viewport: Optional[Dict[str, int]]=None,
+                referer: Optional[str]=None,
+                rendered_hostname_only: bool=True,
+                force: bool=False,
+                recapture_interval: int=300,
+                priority: int=0
+                ) -> str:
+        to_enqueue: CaptureSettings
+        if settings:
+            to_enqueue = settings
+        else:
+            to_enqueue = {'depth': depth, 'rendered_hostname_only': rendered_hostname_only}
+            if url:
+                to_enqueue['url'] = url
+            elif document_name and document:
+                to_enqueue['document_name'] = document_name
+                to_enqueue['document'] = document
+            else:
+                raise Exception('Needs either a URL or a document_name *and* a document.')
+            if browser:
+                to_enqueue['browser'] = browser
+            if device_name:
+                to_enqueue['device_name'] = device_name
+            if user_agent:
+                to_enqueue['user_agent'] = user_agent
+            if proxy:
+                to_enqueue['proxy'] = proxy
+            if general_timeout_in_sec is not None:  # that would be a terrible idea, but this one could be 0
+                to_enqueue['general_timeout_in_sec'] = general_timeout_in_sec
+            if cookies:
+                to_enqueue['cookies'] = cookies
+            if headers:
+                to_enqueue['headers'] = headers
+            if http_credentials:
+                to_enqueue['http_credentials'] = http_credentials
+            if viewport:
+                to_enqueue['viewport'] = viewport
+            if referer:
+                to_enqueue['referer'] = referer
+
+        r = self.session.post(urljoin(self.root_url, 'enqueue'), json=to_enqueue)
         return r.json()
 
-    def capture_status(self, uuid: str) -> CaptureStatus:
+    def get_capture_status(self, uuid: str) -> CaptureStatus:
         r = self.session.get(urljoin(self.root_url, str(Path('capture_status', uuid))))
         return r.json()
 
@@ -112,14 +193,14 @@ class PyLacus():
         return decoded_capture
 
     @overload
-    def capture_result(self, uuid: str, *, decode: Literal[True]=True) -> CaptureResponse:
+    def get_capture(self, uuid: str, *, decode: Literal[True]=True) -> CaptureResponse:
         ...
 
     @overload
-    def capture_result(self, uuid: str, *, decode: Literal[False]) -> CaptureResponseJson:
+    def get_capture(self, uuid: str, *, decode: Literal[False]) -> CaptureResponseJson:
         ...
 
-    def capture_result(self, uuid: str, *, decode: bool=True) -> Union[CaptureResponse, CaptureResponseJson]:
+    def get_capture(self, uuid: str, *, decode: bool=True) -> Union[CaptureResponse, CaptureResponseJson]:
         r = self.session.get(urljoin(self.root_url, str(Path('capture_result', uuid))))
         response: CaptureResponseJson = r.json()
         if not decode:
