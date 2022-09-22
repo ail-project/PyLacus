@@ -2,7 +2,7 @@ import argparse
 import json
 import sys
 
-from .api import PyLacus
+from .api import PyLacus, CaptureStatus, CaptureResponse, CaptureResponseJson, CaptureSettings  # noqa
 
 
 def main():
