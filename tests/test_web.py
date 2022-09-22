@@ -18,11 +18,11 @@ class TestBasic(unittest.TestCase):
         self.assertTrue(self.client.redis_up())
 
     def test_submit(self):
-        uuid = self.client.enqueue({'url': "circl.lu"})
+        uuid = self.client.enqueue(url="circl.lu")
         while True:
-            status = self.client.capture_status(uuid)
+            status = self.client.get_capture_status(uuid)
             if status == CaptureStatus.DONE:
                 break
             time.sleep(5)
-        response = self.client.capture_result(uuid)
+        response = self.client.get_capture(uuid)
         self.assertEqual(response['status'], 1)
