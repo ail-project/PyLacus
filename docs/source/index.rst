@@ -1,14 +1,9 @@
-.. PyLookyloo documentation master file, created by
-   sphinx-quickstart on Tue Mar 23 12:28:17 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to PyProject's documentation!
+Welcome to PyLacus's documentation!
 =============================================
 
-This is the client API for `PyProject <https://github.com/Lookyloo/project_template>`_:
+This is the client API for `Lacus <https://github.com/ail-project/Lacus>`_:
 
-  foo
+  A capturing system using playwright, as a web service. `
 
 
 Installation
@@ -16,15 +11,32 @@ Installation
 
 The package is available on PyPi, so you can install it with::
 
-  pip install pyproject
+  pip install pylacus
 
 
 Usage
 -----
 
-You can use `client` as a python script::
+You can use `pylacus` as a python script::
 
-	$ client -h
+    $ pylacus -h
+    usage: pylacus [-h] --url-instance URL_INSTANCE [--redis_up] {enqueue,status,result} ...
+
+    Query a Lacus instance.
+
+    positional arguments:
+      {enqueue,status,result}
+                            Available commands
+        enqueue             Enqueue a url for capture
+        status              Get status of a capture
+        result              Get result of a capture.
+
+    options:
+      -h, --help            show this help message and exit
+      --url-instance URL_INSTANCE
+                            URL of the instance.
+      --redis_up            Check if redis is up.
+
 
 Or as a library:
 

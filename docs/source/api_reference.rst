@@ -4,11 +4,11 @@ API reference
 .. toctree::
    :maxdepth: 2
 
-.. automodule:: pyproject
+.. automodule:: pylacus
    :members:
 
-PyProject
+PyLacus
 ---------
 
-.. autoclass:: PyProject
+.. autoclass:: PyLacus
    :members:

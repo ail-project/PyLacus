@@ -17,9 +17,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'PyProject'
-copyright = '2021, Lookyloo team'
-author = 'Lookyloo team'
+project = 'PyLacus'
+copyright = '2022, AIL Project and Lookyloo team'
+author = 'AIL Project and Lookyloo team'
 
 # The full version, including alpha/beta/rc tags
 release = 'v0.0.1'

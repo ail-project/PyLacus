@@ -14,6 +14,7 @@ BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 @unique
 class CaptureStatus(IntEnum):
+    '''The status of the capture'''
     UNKNOWN = -1
     QUEUED = 0
     DONE = 1
@@ -21,6 +22,7 @@ class CaptureStatus(IntEnum):
 
 
 class CaptureResponse(TypedDict, total=False):
+    '''A capture made by Lacus. With the base64 encoded image and downloaded file decoded to bytes.'''
 
     status: int
     last_redirected_url: str
@@ -35,6 +37,7 @@ class CaptureResponse(TypedDict, total=False):
 
 
 class CaptureResponseJson(TypedDict, total=False):
+    '''A capture made by Lacus. With the base64 encoded image and downloaded file *not* decoded.'''
 
     status: int
     last_redirected_url: Optional[str]
@@ -49,6 +52,7 @@ class CaptureResponseJson(TypedDict, total=False):
 
 
 class CaptureSettings(TypedDict, total=False):
+    '''The capture settings that can be passed to Lacus.'''
 
     url: Optional[str]
     document_name: Optional[str]
@@ -99,6 +103,7 @@ class PyLacus():
 
     @overload
     def enqueue(self, *, settings: Optional[CaptureSettings]=None) -> str:
+        '''Submit a new capture. Pass a typed dictionary, get the UUID.'''
         ...
 
     @overload
@@ -120,6 +125,7 @@ class PyLacus():
                 recapture_interval: int=300,
                 priority: int=0
                 ) -> str:
+        '''Submit a new capture. Pass all the relevant settings, get the UUID.'''
         ...
 
     def enqueue(self, *,
@@ -178,6 +184,7 @@ class PyLacus():
         return r.json()
 
     def get_capture_status(self, uuid: str) -> CaptureStatus:
+        '''Get the status of the capture.'''
         r = self.session.get(urljoin(self.root_url, str(Path('capture_status', uuid))))
         return r.json()
 
@@ -194,10 +201,12 @@ class PyLacus():
 
     @overload
     def get_capture(self, uuid: str, *, decode: Literal[True]=True) -> CaptureResponse:
+        '''Get the the capture, with the screenshot and downloaded file decoded to bytes.'''
         ...
 
     @overload
     def get_capture(self, uuid: str, *, decode: Literal[False]) -> CaptureResponseJson:
+        '''Get the the capture, with the screenshot and downloaded file base64 encoded.'''
         ...
 
     def get_capture(self, uuid: str, *, decode: bool=True) -> Union[CaptureResponse, CaptureResponseJson]:
