@@ -103,7 +103,6 @@ class PyLacus():
 
     @overload
     def enqueue(self, *, settings: Optional[CaptureSettings]=None) -> str:
-        '''Submit a new capture. Pass a typed dictionary, get the UUID.'''
         ...
 
     @overload
@@ -125,7 +124,6 @@ class PyLacus():
                 recapture_interval: int=300,
                 priority: int=0
                 ) -> str:
-        '''Submit a new capture. Pass all the relevant settings, get the UUID.'''
         ...
 
     def enqueue(self, *,
@@ -147,6 +145,7 @@ class PyLacus():
                 recapture_interval: int=300,
                 priority: int=0
                 ) -> str:
+        '''Submit a new capture. Pass a typed dictionary or any of the relevant settings, get the UUID.'''
         to_enqueue: CaptureSettings
         if settings:
             to_enqueue = settings
@@ -201,15 +200,14 @@ class PyLacus():
 
     @overload
     def get_capture(self, uuid: str, *, decode: Literal[True]=True) -> CaptureResponse:
-        '''Get the the capture, with the screenshot and downloaded file decoded to bytes.'''
         ...
 
     @overload
     def get_capture(self, uuid: str, *, decode: Literal[False]) -> CaptureResponseJson:
-        '''Get the the capture, with the screenshot and downloaded file base64 encoded.'''
         ...
 
     def get_capture(self, uuid: str, *, decode: bool=True) -> Union[CaptureResponse, CaptureResponseJson]:
+        '''Get the the capture, with the screenshot and downloaded file decoded to bytes or base64 encoded.'''
         r = self.session.get(urljoin(self.root_url, str(Path('capture_result', uuid))))
         response: CaptureResponseJson = r.json()
         if not decode:
