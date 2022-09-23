@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pylacus"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python CLI and module for lacus"
 authors = ["Raphaël Vinot <raphael.vinot@circl.lu>"]
 license = "BSD-3-Clause"
