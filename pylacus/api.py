@@ -67,6 +67,9 @@ class CaptureSettings(TypedDict, total=False):
     http_credentials: Optional[Dict[str, int]]
     viewport: Optional[Dict[str, int]]
     referer: Optional[str]
+    force: Optional[bool]
+    recapture_interval: Optional[int]
+    priority: Optional[int]
 
     depth: Optional[int]
     rendered_hostname_only: bool  # Note: only used if depth is > 0
@@ -150,7 +153,8 @@ class PyLacus():
         if settings:
             to_enqueue = settings
         else:
-            to_enqueue = {'depth': depth, 'rendered_hostname_only': rendered_hostname_only}
+            to_enqueue = {'depth': depth, 'rendered_hostname_only': rendered_hostname_only,
+                          'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
             if url:
                 to_enqueue['url'] = url
             elif document_name and document:
