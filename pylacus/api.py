@@ -71,7 +71,7 @@ class CaptureSettings(TypedDict, total=False):
     recapture_interval: Optional[int]
     priority: Optional[int]
 
-    depth: Optional[int]
+    depth: int
     rendered_hostname_only: bool  # Note: only used if depth is > 0
 
 
