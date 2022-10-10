@@ -38,3 +38,29 @@ options:
 ### Library
 
 See [API Reference](https://pylacus.readthedocs.io/en/latest/api_reference.html)
+
+# Example
+
+## Enqueue
+
+```python
+
+from redis import Redis
+from lacuscore import LacusCore
+
+redis = Redis()
+lacus = lacus = PyLacus("http://127.0.0.1:7100")
+uuid = lacus.enqueue('google.fr')
+```
+
+## Status of a capture
+
+```python
+status = lacus.get_capture_status(uuid)
+```
+
+## Capture result
+
+```python
+result = lacus.get_capture(uuid)
+```
