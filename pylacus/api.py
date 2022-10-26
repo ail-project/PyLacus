@@ -25,7 +25,7 @@ class CaptureResponse(TypedDict, total=False):
     '''A capture made by Lacus. With the base64 encoded image and downloaded file decoded to bytes.'''
 
     status: int
-    last_redirected_url: str
+    last_redirected_url: Optional[str]
     har: Optional[Dict[str, Any]]
     cookies: Optional[List[Dict[str, str]]]
     error: Optional[str]
@@ -34,6 +34,7 @@ class CaptureResponse(TypedDict, total=False):
     downloaded_filename: Optional[str]
     downloaded_file: Optional[bytes]
     children: Optional[List[Any]]
+    runtime: Optional[float]
 
 
 class CaptureResponseJson(TypedDict, total=False):
@@ -49,6 +50,7 @@ class CaptureResponseJson(TypedDict, total=False):
     downloaded_filename: Optional[str]
     downloaded_file: Optional[str]
     children: Optional[List[Any]]
+    runtime: Optional[float]
 
 
 class CaptureSettings(TypedDict, total=False):
