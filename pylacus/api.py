@@ -72,6 +72,7 @@ class CaptureSettings(TypedDict, total=False):
     force: Optional[bool]
     recapture_interval: Optional[int]
     priority: Optional[int]
+    uuid: Optional[str]
 
     depth: int
     rendered_hostname_only: bool  # Note: only used if depth is > 0
@@ -127,7 +128,8 @@ class PyLacus():
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
-                priority: int=0
+                priority: int=0,
+                uuid: Optional[str]=None,
                 ) -> str:
         ...
 
@@ -148,7 +150,8 @@ class PyLacus():
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
-                priority: int=0
+                priority: int=0,
+                uuid: Optional[str]=None,
                 ) -> str:
         '''Submit a new capture. Pass a typed dictionary or any of the relevant settings, get the UUID.'''
         to_enqueue: CaptureSettings
@@ -182,6 +185,8 @@ class PyLacus():
                 to_enqueue['viewport'] = viewport
             if referer:
                 to_enqueue['referer'] = referer
+            if uuid:
+                to_enqueue['uuid'] = uuid
 
         r = self.session.post(urljoin(self.root_url, 'enqueue'), json=to_enqueue)
         return r.json()
