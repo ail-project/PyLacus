@@ -66,7 +66,11 @@ class CaptureSettings(TypedDict, total=False):
     general_timeout_in_sec: Optional[int]
     cookies: Optional[List[Dict[str, Any]]]
     headers: Optional[Union[str, Dict[str, str]]]
-    http_credentials: Optional[Dict[str, int]]
+    http_credentials: Optional[Dict[str, str]]
+    geolocation: Optional[Dict[str, float]]
+    timezone_id: Optional[str]
+    locale: Optional[str]
+    color_scheme: Optional[str]
     viewport: Optional[Dict[str, int]]
     referer: Optional[str]
     force: Optional[bool]
@@ -122,7 +126,11 @@ class PyLacus():
                 general_timeout_in_sec: Optional[int]=None,
                 cookies: Optional[List[Dict[str, Any]]]=None,
                 headers: Optional[Union[str, Dict[str, str]]]=None,
-                http_credentials: Optional[Dict[str, int]]=None,
+                http_credentials: Optional[Dict[str, str]]=None,
+                geolocation: Optional[Dict[str, float]]=None,
+                timezone_id: Optional[str]=None,
+                locale: Optional[str]=None,
+                color_scheme: Optional[str]=None,
                 viewport: Optional[Dict[str, int]]=None,
                 referer: Optional[str]=None,
                 rendered_hostname_only: bool=True,
@@ -144,7 +152,11 @@ class PyLacus():
                 general_timeout_in_sec: Optional[int]=None,
                 cookies: Optional[List[Dict[str, Any]]]=None,
                 headers: Optional[Union[str, Dict[str, str]]]=None,
-                http_credentials: Optional[Dict[str, int]]=None,
+                http_credentials: Optional[Dict[str, str]]=None,
+                geolocation: Optional[Dict[str, float]]=None,
+                timezone_id: Optional[str]=None,
+                locale: Optional[str]=None,
+                color_scheme: Optional[str]=None,
                 viewport: Optional[Dict[str, int]]=None,
                 referer: Optional[str]=None,
                 rendered_hostname_only: bool=True,
@@ -181,6 +193,14 @@ class PyLacus():
                 to_enqueue['headers'] = headers
             if http_credentials:
                 to_enqueue['http_credentials'] = http_credentials
+            if geolocation:
+                to_enqueue['geolocation'] = geolocation
+            if timezone_id:
+                to_enqueue['timezone_id'] = timezone_id
+            if locale:
+                to_enqueue['locale'] = locale
+            if color_scheme:
+                to_enqueue['color_scheme'] = color_scheme
             if viewport:
                 to_enqueue['viewport'] = viewport
             if referer:
