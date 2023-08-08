@@ -4,7 +4,7 @@
 from base64 import b64decode
 from enum import IntEnum, unique
 from pathlib import Path
-from typing import Literal, Optional, Union, Dict, List, Any, TypedDict, overload, cast
+from typing import Literal, Optional, Union, Dict, List, Any, TypedDict, overload, cast, Set
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -35,6 +35,7 @@ class CaptureResponse(TypedDict, total=False):
     downloaded_file: Optional[bytes]
     children: Optional[List[Any]]
     runtime: Optional[float]
+    potential_favicons: Optional[Set[bytes]]
 
 
 class CaptureResponseJson(TypedDict, total=False):
@@ -51,6 +52,7 @@ class CaptureResponseJson(TypedDict, total=False):
     downloaded_file: Optional[str]
     children: Optional[List[Any]]
     runtime: Optional[float]
+    potential_favicons: Optional[List[str]]
 
 
 class CaptureSettings(TypedDict, total=False):
@@ -73,6 +75,8 @@ class CaptureSettings(TypedDict, total=False):
     color_scheme: Optional[str]
     viewport: Optional[Dict[str, int]]
     referer: Optional[str]
+    with_favicon: bool
+
     force: Optional[bool]
     recapture_interval: Optional[int]
     priority: Optional[int]
@@ -133,6 +137,7 @@ class PyLacus():
                 color_scheme: Optional[str]=None,
                 viewport: Optional[Dict[str, int]]=None,
                 referer: Optional[str]=None,
+                with_favicon: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -159,6 +164,7 @@ class PyLacus():
                 color_scheme: Optional[str]=None,
                 viewport: Optional[Dict[str, int]]=None,
                 referer: Optional[str]=None,
+                with_favicon: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -205,6 +211,8 @@ class PyLacus():
                 to_enqueue['viewport'] = viewport
             if referer:
                 to_enqueue['referer'] = referer
+            if with_favicon:
+                to_enqueue['with_favicon'] = with_favicon
             if uuid:
                 to_enqueue['uuid'] = uuid
 
@@ -222,6 +230,8 @@ class PyLacus():
             decoded_capture['png'] = b64decode(capture['png'])
         if capture.get('downloaded_file') and capture['downloaded_file']:
             decoded_capture['downloaded_file'] = b64decode(capture['downloaded_file'])
+        if capture.get('potential_favicons') and capture['potential_favicons']:
+            decoded_capture['potential_favicons'] = {b64decode(f) for f in capture['potential_favicons']}
         if capture.get('children') and capture['children']:
             for child in capture['children']:
                 child = self._decode_response(child)
