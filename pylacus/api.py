@@ -3,6 +3,7 @@
 
 from base64 import b64decode
 from enum import IntEnum, unique
+from importlib.metadata import version
 from pathlib import Path
 from typing import Literal, Optional, Union, Dict, List, Any, TypedDict, overload, cast, Set
 from urllib.parse import urljoin, urlparse
@@ -88,10 +89,13 @@ class CaptureSettings(TypedDict, total=False):
 
 class PyLacus():
 
-    def __init__(self, root_url: str):
+    def __init__(self, root_url: str, useragent: Optional[str]=None,
+                 *, proxies: Optional[Dict[str, str]]=None):
         '''Query a specific instance.
 
         :param root_url: URL of the instance to query.
+        :param useragent: The User Agent used by requests to run the HTTP requests against Lacus, it is *not* passed to the captures.
+        :param proxies: The proxies to use to connect to lacus (not the ones given to the capture itself) - More details: https://requests.readthedocs.io/en/latest/user/advanced/#proxies
         '''
         self.root_url = root_url
 
@@ -100,6 +104,9 @@ class PyLacus():
         if not self.root_url.endswith('/'):
             self.root_url += '/'
         self.session = requests.session()
+        self.session.headers['user-agent'] = useragent if useragent else f'PyLacus / {version("pylacus")}'
+        if proxies:
+            self.session.proxies.update(proxies)
 
     @property
     def is_up(self) -> bool:
