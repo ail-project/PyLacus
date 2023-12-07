@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from base64 import b64decode
+from datetime import datetime, date
 from enum import IntEnum, unique
 from importlib.metadata import version
 from pathlib import Path
@@ -259,3 +260,39 @@ class PyLacus():
         if not decode:
             return response
         return self._decode_response(response)
+
+    # # Stats and status of the lacus instance
+
+    def daily_stats(self, d: Optional[Union[str, date, datetime]]=None, /, *, cardinality_only: bool=True):
+        '''Get the stats for a specific day (only the last few days are stored in lacus).
+
+        :param cardinality_only: If True, only return the number of entries in each list (captures, retries, failed retries), instead of the URLs.
+        '''
+        if cardinality_only:
+            url_path = Path('daily_stats')
+        else:
+            url_path = Path('daily_stats_details')
+
+        if d:
+            if isinstance(d, (date, datetime)):
+                url_path /= d.isoformat()
+            else:
+                url_path /= d
+
+        r = self.session.get(urljoin(self.root_url, str(url_path)))
+        return r.json()
+
+    def db_status(self):
+        '''Gets the database status (number of keys, memory usage)'''
+        r = self.session.get(urljoin(self.root_url, 'db_status'))
+        return r.json()
+
+    def ongoing_captures(self, *, with_settings: bool=False):
+        r = self.session.get(urljoin(self.root_url, 'ongoing_captures'),
+                             params={'with_settings': True} if with_settings else {})
+        return r.json()
+
+    def enqueued_captures(self, *, with_settings: bool=False):
+        r = self.session.get(urljoin(self.root_url, 'enqueued_captures'),
+                             params={'with_settings': True} if with_settings else {})
+        return r.json()
