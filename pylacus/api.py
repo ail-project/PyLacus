@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+
+from __future__ import annotations
 
 from base64 import b64decode
 from datetime import datetime, date
 from enum import IntEnum, unique
 from importlib.metadata import version
 from pathlib import Path
-from typing import Literal, Optional, Union, Dict, List, Any, TypedDict, overload, cast, Set
+from typing import Literal, Any, TypedDict, overload, cast
 from urllib.parse import urljoin, urlparse
 
 import requests
@@ -27,62 +28,62 @@ class CaptureResponse(TypedDict, total=False):
     '''A capture made by Lacus. With the base64 encoded image and downloaded file decoded to bytes.'''
 
     status: int
-    last_redirected_url: Optional[str]
-    har: Optional[Dict[str, Any]]
-    cookies: Optional[List[Dict[str, str]]]
-    error: Optional[str]
-    html: Optional[str]
-    png: Optional[bytes]
-    downloaded_filename: Optional[str]
-    downloaded_file: Optional[bytes]
-    children: Optional[List[Any]]
-    runtime: Optional[float]
-    potential_favicons: Optional[Set[bytes]]
+    last_redirected_url: str | None
+    har: dict[str, Any] | None
+    cookies: list[dict[str, str]] | None
+    error: str | None
+    html: str | None
+    png: bytes | None
+    downloaded_filename: str | None
+    downloaded_file: bytes | None
+    children: list[Any] | None
+    runtime: float | None
+    potential_favicons: set[bytes] | None
 
 
 class CaptureResponseJson(TypedDict, total=False):
     '''A capture made by Lacus. With the base64 encoded image and downloaded file *not* decoded.'''
 
     status: int
-    last_redirected_url: Optional[str]
-    har: Optional[Dict[str, Any]]
-    cookies: Optional[List[Dict[str, str]]]
-    error: Optional[str]
-    html: Optional[str]
-    png: Optional[str]
-    downloaded_filename: Optional[str]
-    downloaded_file: Optional[str]
-    children: Optional[List[Any]]
-    runtime: Optional[float]
-    potential_favicons: Optional[List[str]]
+    last_redirected_url: str | None
+    har: dict[str, Any] | None
+    cookies: list[dict[str, str]] | None
+    error: str | None
+    html: str | None
+    png: str | None
+    downloaded_filename: str | None
+    downloaded_file: str | None
+    children: list[Any] | None
+    runtime: float | None
+    potential_favicons: list[str] | None
 
 
 class CaptureSettings(TypedDict, total=False):
     '''The capture settings that can be passed to Lacus.'''
 
-    url: Optional[str]
-    document_name: Optional[str]
-    document: Optional[str]
-    browser: Optional[str]
-    device_name: Optional[str]
-    user_agent: Optional[str]
-    proxy: Optional[Union[str, Dict[str, str]]]
-    general_timeout_in_sec: Optional[int]
-    cookies: Optional[List[Dict[str, Any]]]
-    headers: Optional[Union[str, Dict[str, str]]]
-    http_credentials: Optional[Dict[str, str]]
-    geolocation: Optional[Dict[str, float]]
-    timezone_id: Optional[str]
-    locale: Optional[str]
-    color_scheme: Optional[str]
-    viewport: Optional[Dict[str, int]]
-    referer: Optional[str]
+    url: str | None
+    document_name: str | None
+    document: str | None
+    browser: str | None
+    device_name: str | None
+    user_agent: str | None
+    proxy: str | dict[str, str] | None
+    general_timeout_in_sec: int | None
+    cookies: list[dict[str, Any]] | None
+    headers: str | dict[str, str] | None
+    http_credentials: dict[str, str] | None
+    geolocation: dict[str, float] | None
+    timezone_id: str | None
+    locale: str | None
+    color_scheme: str | None
+    viewport: dict[str, int] | None
+    referer: str | None
     with_favicon: bool
 
-    force: Optional[bool]
-    recapture_interval: Optional[int]
-    priority: Optional[int]
-    uuid: Optional[str]
+    force: bool | None
+    recapture_interval: int | None
+    priority: int | None
+    uuid: str | None
 
     depth: int
     rendered_hostname_only: bool  # Note: only used if depth is > 0
@@ -90,8 +91,8 @@ class CaptureSettings(TypedDict, total=False):
 
 class PyLacus():
 
-    def __init__(self, root_url: str, useragent: Optional[str]=None,
-                 *, proxies: Optional[Dict[str, str]]=None):
+    def __init__(self, root_url: str, useragent: str | None=None,
+                 *, proxies: dict[str, str] | None=None) -> None:
         '''Query a specific instance.
 
         :param root_url: URL of the instance to query.
@@ -118,66 +119,66 @@ class PyLacus():
             return False
         return r.status_code == 200
 
-    def redis_up(self) -> Dict:
+    def redis_up(self) -> dict[str, Any]:
         '''Check if redis is up and running'''
         r = self.session.get(urljoin(self.root_url, 'redis_up'))
         return r.json()
 
     @overload
-    def enqueue(self, *, settings: Optional[CaptureSettings]=None) -> str:
+    def enqueue(self, *, settings: CaptureSettings | None=None) -> str:
         ...
 
     @overload
     def enqueue(self, *,
-                url: Optional[str]=None,
-                document_name: Optional[str]=None, document: Optional[str]=None,
+                url: str | None=None,
+                document_name: str | None=None, document: str | None=None,
                 depth: int=0,
-                browser: Optional[BROWSER]=None, device_name: Optional[str]=None,
-                user_agent: Optional[str]=None,
-                proxy: Optional[Union[str, Dict[str, str]]]=None,
-                general_timeout_in_sec: Optional[int]=None,
-                cookies: Optional[List[Dict[str, Any]]]=None,
-                headers: Optional[Union[str, Dict[str, str]]]=None,
-                http_credentials: Optional[Dict[str, str]]=None,
-                geolocation: Optional[Dict[str, float]]=None,
-                timezone_id: Optional[str]=None,
-                locale: Optional[str]=None,
-                color_scheme: Optional[str]=None,
-                viewport: Optional[Dict[str, int]]=None,
-                referer: Optional[str]=None,
+                browser: BROWSER | None=None, device_name: str | None=None,
+                user_agent: str | None=None,
+                proxy: str | dict[str, str] | None=None,
+                general_timeout_in_sec: int | None=None,
+                cookies: list[dict[str, Any]] | None=None,
+                headers: str | dict[str, str] | None=None,
+                http_credentials: dict[str, str] | None=None,
+                geolocation: dict[str, float] | None=None,
+                timezone_id: str | None=None,
+                locale: str | None=None,
+                color_scheme: str | None=None,
+                viewport: dict[str, int] | None=None,
+                referer: str | None=None,
                 with_favicon: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
                 priority: int=0,
-                uuid: Optional[str]=None,
+                uuid: str | None=None,
                 ) -> str:
         ...
 
     def enqueue(self, *,
-                settings: Optional[CaptureSettings]=None,
-                url: Optional[str]=None,
-                document_name: Optional[str]=None, document: Optional[str]=None,
+                settings: CaptureSettings | None=None,
+                url: str | None=None,
+                document_name: str | None=None, document: str | None=None,
                 depth: int=0,
-                browser: Optional[BROWSER]=None, device_name: Optional[str]=None,
-                user_agent: Optional[str]=None,
-                proxy: Optional[Union[str, Dict[str, str]]]=None,
-                general_timeout_in_sec: Optional[int]=None,
-                cookies: Optional[List[Dict[str, Any]]]=None,
-                headers: Optional[Union[str, Dict[str, str]]]=None,
-                http_credentials: Optional[Dict[str, str]]=None,
-                geolocation: Optional[Dict[str, float]]=None,
-                timezone_id: Optional[str]=None,
-                locale: Optional[str]=None,
-                color_scheme: Optional[str]=None,
-                viewport: Optional[Dict[str, int]]=None,
-                referer: Optional[str]=None,
+                browser: BROWSER | None=None, device_name: str | None=None,
+                user_agent: str | None=None,
+                proxy: str | dict[str, str] | None=None,
+                general_timeout_in_sec: int | None=None,
+                cookies: list[dict[str, Any]] | None=None,
+                headers: str | dict[str, str] | None=None,
+                http_credentials: dict[str, str] | None=None,
+                geolocation: dict[str, float] | None=None,
+                timezone_id: str | None=None,
+                locale: str | None=None,
+                color_scheme: str | None=None,
+                viewport: dict[str, int] | None=None,
+                referer: str | None=None,
                 with_favicon: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
                 priority: int=0,
-                uuid: Optional[str]=None,
+                uuid: str | None=None,
                 ) -> str:
         '''Submit a new capture. Pass a typed dictionary or any of the relevant settings, get the UUID.'''
         to_enqueue: CaptureSettings
@@ -253,7 +254,7 @@ class PyLacus():
     def get_capture(self, uuid: str, *, decode: Literal[False]) -> CaptureResponseJson:
         ...
 
-    def get_capture(self, uuid: str, *, decode: bool=True) -> Union[CaptureResponse, CaptureResponseJson]:
+    def get_capture(self, uuid: str, *, decode: bool=True) -> CaptureResponse | CaptureResponseJson:
         '''Get the the capture, with the screenshot and downloaded file decoded to bytes or base64 encoded.'''
         r = self.session.get(urljoin(self.root_url, str(Path('capture_result', uuid))))
         response: CaptureResponseJson = r.json()
@@ -263,7 +264,7 @@ class PyLacus():
 
     # # Stats and status of the lacus instance
 
-    def daily_stats(self, d: Optional[Union[str, date, datetime]]=None, /, *, cardinality_only: bool=True):
+    def daily_stats(self, d: str | date | datetime | None=None, /, *, cardinality_only: bool=True) -> dict[str, Any]:
         '''Get the stats for a specific day (only the last few days are stored in lacus).
 
         :param cardinality_only: If True, only return the number of entries in each list (captures, retries, failed retries), instead of the URLs.
@@ -282,17 +283,17 @@ class PyLacus():
         r = self.session.get(urljoin(self.root_url, str(url_path)))
         return r.json()
 
-    def db_status(self):
+    def db_status(self) -> dict[str, Any]:
         '''Gets the database status (number of keys, memory usage)'''
         r = self.session.get(urljoin(self.root_url, 'db_status'))
         return r.json()
 
-    def ongoing_captures(self, *, with_settings: bool=False):
+    def ongoing_captures(self, *, with_settings: bool=False) -> list[dict[str, Any]]:
         r = self.session.get(urljoin(self.root_url, 'ongoing_captures'),
                              params={'with_settings': True} if with_settings else {})
         return r.json()
 
-    def enqueued_captures(self, *, with_settings: bool=False):
+    def enqueued_captures(self, *, with_settings: bool=False) -> list[dict[str, Any]]:
         r = self.session.get(urljoin(self.root_url, 'enqueued_captures'),
                              params={'with_settings': True} if with_settings else {})
         return r.json()
