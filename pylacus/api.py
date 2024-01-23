@@ -297,3 +297,13 @@ class PyLacus():
         r = self.session.get(urljoin(self.root_url, 'enqueued_captures'),
                              params={'with_settings': True} if with_settings else {})
         return r.json()
+
+    def status(self) -> dict[str, Any]:
+        '''Get the status of the instance.'''
+        r = self.session.get(urljoin(self.root_url, 'lacus_status'))
+        return r.json()
+
+    def is_busy(self) -> bool:
+        '''Check if the instance is busy.'''
+        r = self.session.get(urljoin(self.root_url, 'is_busy'))
+        return r.json()
