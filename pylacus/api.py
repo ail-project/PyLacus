@@ -6,7 +6,7 @@ from base64 import b64decode
 from datetime import datetime, date
 from enum import IntEnum, unique
 from importlib.metadata import version
-from pathlib import Path
+from pathlib import PurePosixPath
 from typing import Literal, Any, TypedDict, overload, cast
 from urllib.parse import urljoin, urlparse
 
@@ -230,7 +230,7 @@ class PyLacus():
 
     def get_capture_status(self, uuid: str) -> CaptureStatus:
         '''Get the status of the capture.'''
-        r = self.session.get(urljoin(self.root_url, str(Path('capture_status', uuid))))
+        r = self.session.get(urljoin(self.root_url, str(PurePosixPath('capture_status', uuid))))
         return r.json()
 
     def _decode_response(self, capture: CaptureResponseJson) -> CaptureResponse:
@@ -256,7 +256,7 @@ class PyLacus():
 
     def get_capture(self, uuid: str, *, decode: bool=True) -> CaptureResponse | CaptureResponseJson:
         '''Get the the capture, with the screenshot and downloaded file decoded to bytes or base64 encoded.'''
-        r = self.session.get(urljoin(self.root_url, str(Path('capture_result', uuid))))
+        r = self.session.get(urljoin(self.root_url, str(PurePosixPath('capture_result', uuid))))
         response: CaptureResponseJson = r.json()
         if not decode:
             return response
@@ -270,9 +270,9 @@ class PyLacus():
         :param cardinality_only: If True, only return the number of entries in each list (captures, retries, failed retries), instead of the URLs.
         '''
         if cardinality_only:
-            url_path = Path('daily_stats')
+            url_path = PurePosixPath('daily_stats')
         else:
-            url_path = Path('daily_stats_details')
+            url_path = PurePosixPath('daily_stats_details')
 
         if d:
             if isinstance(d, (date, datetime)):
