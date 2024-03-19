@@ -79,6 +79,7 @@ class CaptureSettings(TypedDict, total=False):
     viewport: dict[str, int] | None
     referer: str | None
     with_favicon: bool
+    allow_tracking: bool
 
     force: bool | None
     recapture_interval: int | None
@@ -147,6 +148,7 @@ class PyLacus():
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
                 with_favicon: bool=False,
+                allow_tracking: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -174,6 +176,7 @@ class PyLacus():
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
                 with_favicon: bool=False,
+                allow_tracking: bool=False,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -222,6 +225,8 @@ class PyLacus():
                 to_enqueue['referer'] = referer
             if with_favicon:
                 to_enqueue['with_favicon'] = with_favicon
+            if allow_tracking:
+                to_enqueue['allow_tracking'] = allow_tracking
             if uuid:
                 to_enqueue['uuid'] = uuid
 
