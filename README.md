@@ -49,7 +49,7 @@ from redis import Redis
 from pylacus import PyLacus
 
 redis = Redis()
-lacus = lacus = PyLacus("http://127.0.0.1:7100")
+lacus = PyLacus("http://127.0.0.1:7100")
 uuid = lacus.enqueue('google.fr')
 ```
 
