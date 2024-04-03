@@ -46,7 +46,7 @@ See [API Reference](https://pylacus.readthedocs.io/en/latest/api_reference.html)
 ```python
 
 from redis import Redis
-from lacuscore import LacusCore
+from pylacus import PyLacus
 
 redis = Redis()
 lacus = lacus = PyLacus("http://127.0.0.1:7100")
