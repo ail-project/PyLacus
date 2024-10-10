@@ -76,6 +76,7 @@ class CaptureSettings(TypedDict, total=False):
     timezone_id: str | None
     locale: str | None
     color_scheme: str | None
+    java_script_enabled: bool
     viewport: dict[str, int] | None
     referer: str | None
     with_favicon: bool
@@ -145,6 +146,7 @@ class PyLacus():
                 timezone_id: str | None=None,
                 locale: str | None=None,
                 color_scheme: str | None=None,
+                java_script_enabled: bool=True,
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
                 with_favicon: bool=False,
@@ -173,6 +175,7 @@ class PyLacus():
                 timezone_id: str | None=None,
                 locale: str | None=None,
                 color_scheme: str | None=None,
+                java_script_enabled: bool=True,
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
                 with_favicon: bool=False,
@@ -188,7 +191,9 @@ class PyLacus():
         if settings:
             to_enqueue = settings
         else:
-            to_enqueue = {'depth': depth, 'rendered_hostname_only': rendered_hostname_only,
+            to_enqueue = {'depth': depth, 'java_script_enabled': java_script_enabled,
+                          'with_favicon': with_favicon, 'allow_tracking': allow_tracking,
+                          'rendered_hostname_only': rendered_hostname_only,
                           'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
             if url:
                 to_enqueue['url'] = url
@@ -223,10 +228,6 @@ class PyLacus():
                 to_enqueue['viewport'] = viewport
             if referer:
                 to_enqueue['referer'] = referer
-            if with_favicon:
-                to_enqueue['with_favicon'] = with_favicon
-            if allow_tracking:
-                to_enqueue['allow_tracking'] = allow_tracking
             if uuid:
                 to_enqueue['uuid'] = uuid
 
