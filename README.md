@@ -44,11 +44,8 @@ See [API Reference](https://pylacus.readthedocs.io/en/latest/api_reference.html)
 ## Enqueue
 
 ```python
-
-from redis import Redis
 from pylacus import PyLacus
 
-redis = Redis()
 lacus = PyLacus("http://127.0.0.1:7100")
 uuid = lacus.enqueue('google.fr')
 ```
