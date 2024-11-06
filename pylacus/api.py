@@ -85,6 +85,7 @@ class CaptureSettings(TypedDict, total=False):
     force: bool | None
     recapture_interval: int | None
     priority: int | None
+    max_retries: int | None
     uuid: str | None
 
     depth: int
@@ -155,6 +156,7 @@ class PyLacus():
                 force: bool=False,
                 recapture_interval: int=300,
                 priority: int=0,
+                max_retries: int | None=None,
                 uuid: str | None=None,
                 ) -> str:
         ...
@@ -184,6 +186,7 @@ class PyLacus():
                 force: bool=False,
                 recapture_interval: int=300,
                 priority: int=0,
+                max_retries: int | None=None,
                 uuid: str | None=None,
                 ) -> str:
         '''Submit a new capture. Pass a typed dictionary or any of the relevant settings, get the UUID.'''
@@ -228,6 +231,8 @@ class PyLacus():
                 to_enqueue['viewport'] = viewport
             if referer:
                 to_enqueue['referer'] = referer
+            if max_retries is not None:
+                to_enqueue['max_retries'] = max_retries
             if uuid:
                 to_enqueue['uuid'] = uuid
 
