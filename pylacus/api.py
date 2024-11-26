@@ -12,6 +12,9 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+from urllib3.util import Retry
+from requests.adapters import HTTPAdapter
+
 BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 
@@ -112,6 +115,8 @@ class PyLacus():
         self.session.headers['user-agent'] = useragent if useragent else f'PyLacus / {version("pylacus")}'
         if proxies:
             self.session.proxies.update(proxies)
+        retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[500, 502, 503, 504])
+        self.session.mount('http://', HTTPAdapter(max_retries=retries))
 
     @property
     def is_up(self) -> bool:
