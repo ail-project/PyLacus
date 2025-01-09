@@ -1,55 +1,45 @@
-[tool.poetry]
+[project]
 name = "pylacus"
 version = "1.12.0"
 description = "Python CLI and module for lacus"
-authors = ["Raphaël Vinot <raphael.vinot@circl.lu>"]
+authors = [
+    {name="Raphaël Vinot", email="raphael.vinot@circl.lu"}
+]
 license = "BSD-3-Clause"
 repository = "https://github.com/ail-project/PyLacus"
-documentation = "https://pylacus.readthedocs.io/en/latest/index.html"
-
+documentation = "https://pylacus.readthedocs.io/en/latest/"
 readme = "README.md"
+requires-python = "^3.9"
 
+dynamic = ["classifiers"]
+
+dependencies = [
+    "requests (>=2.32.3)"
+]
+
+[tool.poetry]
 classifiers = [
-    'License :: OSI Approved :: BSD License',
     'Development Status :: 5 - Production/Stable',
     'Environment :: Console',
     'Operating System :: POSIX :: Linux',
     'Intended Audience :: Science/Research',
     'Intended Audience :: Telecommunications Industry',
     'Intended Audience :: Information Technology',
-    'Programming Language :: Python :: 3',
-    'Programming Language :: Python :: 3.9',
-    'Programming Language :: Python :: 3.10',
-    'Programming Language :: Python :: 3.11',
-    'Programming Language :: Python :: 3.12',
-    'Programming Language :: Python :: 3.13',
     'Topic :: Security',
     'Topic :: Internet',
 ]
 
-[tool.poetry.scripts]
+[project.scripts]
 pylacus = 'pylacus:main'
 
-[tool.poetry.dependencies]
-python = "^3.9"
-requests = "^2.32.3"
-Sphinx = [
-    {version = "^7.2", python = ">=3.9,<3.10", optional = true},
-    {version = "^8", python = ">=3.10", optional = true}
-]
+[project.optional-dependencies]
+docs = ["Sphinx (>=8) ; python_version >= '3.10'"]
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.13.0"
+mypy = "^1.14.1"
 types-requests = "^2.32.0.20241016"
-ipython = [
-    {version = "^8.18.0", python = ">=3.9"},
-    {version = "^8.19.0", python = ">=3.10"}
-]
-pytest = "^8.3.3"
-
-[tool.poetry.extras]
-docs = ["Sphinx"]
+pytest = "^8.3.4"
 
 [build-system]
-requires = ["poetry_core"]
+requires = ["poetry-core>=2.0"]
 build-backend = "poetry.core.masonry.api"
