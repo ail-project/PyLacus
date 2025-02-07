@@ -84,6 +84,7 @@ class CaptureSettings(TypedDict, total=False):
     referer: str | None
     with_favicon: bool
     allow_tracking: bool
+    headless: bool
 
     force: bool | None
     recapture_interval: int | None
@@ -157,6 +158,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
+                headless: bool=True,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -187,6 +189,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
+                headless: bool=True,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -201,6 +204,7 @@ class PyLacus():
         else:
             to_enqueue = {'depth': depth, 'java_script_enabled': java_script_enabled,
                           'with_favicon': with_favicon, 'allow_tracking': allow_tracking,
+                          'headless': headless,
                           'rendered_hostname_only': rendered_hostname_only,
                           'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
             if url:
@@ -277,6 +281,16 @@ class PyLacus():
         if not decode:
             return response
         return self._decode_response(response)
+
+    def push_capture(self, uuid: str, push_to: str) -> dict[str, Any]:
+        '''Push the capture to a specific endpoint.
+
+        :param uuid: UUID of the capture to push (in the lacus instance you are querying).
+        :param push_to: Endpoint to push the results of the capture to.
+        '''
+        results = self.get_capture(uuid, decode=False)
+        response = requests.post(push_to, json=results)
+        return response.json()
 
     # # Stats and status of the lacus instance
 

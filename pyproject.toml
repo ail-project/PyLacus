@@ -33,10 +33,10 @@ classifiers = [
 pylacus = 'pylacus:main'
 
 [project.optional-dependencies]
-docs = ["Sphinx (>=8) ; python_version >= '3.10'"]
+docs = ["Sphinx (>=8.1.3) ; python_version >= \"3.10\""]
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.14.1"
+mypy = "^1.15.0"
 types-requests = "^2.32.0.20241016"
 pytest = "^8.3.4"
 
