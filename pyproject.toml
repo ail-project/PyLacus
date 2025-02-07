@@ -9,7 +9,7 @@ license = "BSD-3-Clause"
 repository = "https://github.com/ail-project/PyLacus"
 documentation = "https://pylacus.readthedocs.io/en/latest/"
 readme = "README.md"
-requires-python = "^3.9"
+requires-python = ">=3.9"
 
 dynamic = ["classifiers"]
 
