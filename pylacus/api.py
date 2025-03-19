@@ -74,8 +74,8 @@ class CaptureSettings(TypedDict, total=False):
     user_agent: str | None
     proxy: str | dict[str, str] | None
     general_timeout_in_sec: int | None
-    cookies: list[dict[str, Any]] | None
-    storage: dict[str, Any] | None
+    cookies: str | dict[str, str] | list[dict[str, Any]] | None
+    storage: str | dict[str, Any] | None
     headers: str | dict[str, str] | None
     http_credentials: dict[str, str] | None
     geolocation: dict[str, float] | None
@@ -149,8 +149,8 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: list[dict[str, Any]] | None=None,
-                storage: dict[str, Any] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | None=None,
+                storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
                 geolocation: dict[str, float] | None=None,
@@ -181,8 +181,8 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: list[dict[str, Any]] | None=None,
-                storage: dict[str, Any] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | None=None,
+                storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
                 geolocation: dict[str, float] | None=None,
