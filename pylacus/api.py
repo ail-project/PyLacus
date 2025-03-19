@@ -34,6 +34,7 @@ class CaptureResponse(TypedDict, total=False):
     last_redirected_url: str | None
     har: dict[str, Any] | None
     cookies: list[dict[str, str]] | None
+    storage: dict[str, Any] | None
     error: str | None
     html: str | None
     png: bytes | None
@@ -51,6 +52,7 @@ class CaptureResponseJson(TypedDict, total=False):
     last_redirected_url: str | None
     har: dict[str, Any] | None
     cookies: list[dict[str, str]] | None
+    storage: dict[str, Any] | None
     error: str | None
     html: str | None
     png: str | None
@@ -73,6 +75,7 @@ class CaptureSettings(TypedDict, total=False):
     proxy: str | dict[str, str] | None
     general_timeout_in_sec: int | None
     cookies: list[dict[str, Any]] | None
+    storage: dict[str, Any] | None
     headers: str | dict[str, str] | None
     http_credentials: dict[str, str] | None
     geolocation: dict[str, float] | None
@@ -147,6 +150,7 @@ class PyLacus():
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
                 cookies: list[dict[str, Any]] | None=None,
+                storage: dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
                 geolocation: dict[str, float] | None=None,
@@ -178,6 +182,7 @@ class PyLacus():
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
                 cookies: list[dict[str, Any]] | None=None,
+                storage: dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
                 geolocation: dict[str, float] | None=None,
@@ -224,6 +229,8 @@ class PyLacus():
                 to_enqueue['general_timeout_in_sec'] = general_timeout_in_sec
             if cookies:
                 to_enqueue['cookies'] = cookies
+            if storage:
+                to_enqueue['storage'] = storage
             if headers:
                 to_enqueue['headers'] = headers
             if http_credentials:
