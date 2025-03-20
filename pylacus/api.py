@@ -18,6 +18,18 @@ from requests.adapters import HTTPAdapter
 BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 
+# Clone of the TypedDict from Playwright to keep i consntent with LacusCore
+class Cookie(TypedDict, total=False):
+    name: str
+    value: str
+    domain: str
+    path: str
+    expires: float
+    httpOnly: bool
+    secure: bool
+    sameSite: Literal["Lax", "None", "Strict"]
+
+
 @unique
 class CaptureStatus(IntEnum):
     '''The status of the capture'''
@@ -149,7 +161,7 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
@@ -181,7 +193,7 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
