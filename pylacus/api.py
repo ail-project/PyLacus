@@ -86,7 +86,7 @@ class CaptureSettings(TypedDict, total=False):
     user_agent: str | None
     proxy: str | dict[str, str] | None
     general_timeout_in_sec: int | None
-    cookies: str | dict[str, str] | list[dict[str, Any]] | None
+    cookies: str | dict[str, str] | list[Cookie] | list[dict[str, Any]] | None
     storage: str | dict[str, Any] | None
     headers: str | dict[str, str] | None
     http_credentials: dict[str, str] | None
