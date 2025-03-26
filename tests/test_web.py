@@ -31,6 +31,16 @@ class TestBasic(unittest.TestCase):
         response = self.client.get_capture(uuid)
         self.assertEqual(response['status'], 1)
 
+    def test_submit_without_screenshot(self) -> None:
+        uuid = self.client.enqueue(url="circl.lu", max_retries=0, with_screenshot=False)
+        while True:
+            status = self.client.get_capture_status(uuid)
+            if status == CaptureStatus.DONE:
+                break
+            time.sleep(5)
+        response = self.client.get_capture(uuid)
+        self.assertFalse(response.get('png'))
+
     def test_submit_cookies(self) -> None:
         # Very basic cookie
         uuid = self.client.enqueue(url="circl.lu", cookies="{\"test\": \"test\"}", max_retries=0)
