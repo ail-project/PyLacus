@@ -97,6 +97,7 @@ class CaptureSettings(TypedDict, total=False):
     java_script_enabled: bool
     viewport: dict[str, int] | None
     referer: str | None
+    with_screenshot: bool
     with_favicon: bool
     allow_tracking: bool
     headless: bool
@@ -172,6 +173,7 @@ class PyLacus():
                 java_script_enabled: bool=True,
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
+                with_screenshot: bool=True,
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
@@ -204,6 +206,7 @@ class PyLacus():
                 java_script_enabled: bool=True,
                 viewport: dict[str, int] | None=None,
                 referer: str | None=None,
+                with_screenshot: bool=True,
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
@@ -221,7 +224,7 @@ class PyLacus():
         else:
             to_enqueue = {'depth': depth, 'java_script_enabled': java_script_enabled,
                           'with_favicon': with_favicon, 'allow_tracking': allow_tracking,
-                          'headless': headless,
+                          'headless': headless, 'with_screenshot': with_screenshot,
                           'rendered_hostname_only': rendered_hostname_only,
                           'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
             if url:
