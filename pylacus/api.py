@@ -359,3 +359,8 @@ class PyLacus():
         '''Check if the instance is busy.'''
         r = self.session.get(urljoin(self.root_url, 'is_busy'))
         return r.json()
+
+    def proxies(self) -> dict[str, Any]:
+        '''Get the proxies enabled on the instance.'''
+        r = self.session.get(urljoin(self.root_url, 'proxies'))
+        return r.json()
