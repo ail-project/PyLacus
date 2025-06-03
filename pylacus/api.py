@@ -90,12 +90,12 @@ class CaptureSettings(TypedDict, total=False):
     storage: str | dict[str, Any] | None
     headers: str | dict[str, str] | None
     http_credentials: dict[str, str] | None
-    geolocation: dict[str, float] | None
+    geolocation: dict[str, str | int | float] | None
     timezone_id: str | None
     locale: str | None
     color_scheme: str | None
     java_script_enabled: bool
-    viewport: dict[str, int] | None
+    viewport: dict[str, int | str] | None
     referer: str | None
     with_screenshot: bool
     with_favicon: bool
@@ -166,12 +166,12 @@ class PyLacus():
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
-                geolocation: dict[str, float] | None=None,
+                geolocation: dict[str, str | int | float] | None=None,
                 timezone_id: str | None=None,
                 locale: str | None=None,
                 color_scheme: str | None=None,
                 java_script_enabled: bool=True,
-                viewport: dict[str, int] | None=None,
+                viewport: dict[str, str | int] | None=None,
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
@@ -199,12 +199,12 @@ class PyLacus():
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
-                geolocation: dict[str, float] | None=None,
+                geolocation: dict[str, str | int | float] | None=None,
                 timezone_id: str | None=None,
                 locale: str | None=None,
                 color_scheme: str | None=None,
                 java_script_enabled: bool=True,
-                viewport: dict[str, int] | None=None,
+                viewport: dict[str, str | int] | None=None,
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
