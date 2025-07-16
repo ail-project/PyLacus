@@ -101,6 +101,7 @@ class CaptureSettings(TypedDict, total=False):
     with_favicon: bool
     allow_tracking: bool
     headless: bool
+    init_script: str
 
     force: bool | None
     recapture_interval: int | None
@@ -177,6 +178,7 @@ class PyLacus():
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
+                init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -210,6 +212,7 @@ class PyLacus():
                 with_favicon: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
+                init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
@@ -266,6 +269,8 @@ class PyLacus():
                 to_enqueue['max_retries'] = max_retries
             if uuid:
                 to_enqueue['uuid'] = uuid
+            if init_script:
+                to_enqueue['init_script'] = init_script
 
         r = self.session.post(urljoin(self.root_url, 'enqueue'), json=to_enqueue)
         return r.json()
