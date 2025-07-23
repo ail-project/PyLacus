@@ -18,7 +18,7 @@ from requests.adapters import HTTPAdapter
 BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 
-# Clone of the TypedDict from Playwright to keep i consntent with LacusCore
+# Clone of the TypedDict from Playwright to keep it consistent with LacusCore
 class Cookie(TypedDict, total=False):
     name: str
     value: str
@@ -28,6 +28,20 @@ class Cookie(TypedDict, total=False):
     httpOnly: bool
     secure: bool
     sameSite: Literal["Lax", "None", "Strict"]
+    partitionKey: str
+
+
+class SetCookieParam(TypedDict, total=False):
+    name: str
+    value: str
+    url: str
+    domain: str
+    path: str
+    expires: float
+    httpOnly: bool
+    secure: bool
+    sameSite: Literal["Lax", "None", "Strict"]
+    partitionKey: str
 
 
 @unique
@@ -45,7 +59,7 @@ class CaptureResponse(TypedDict, total=False):
     status: int
     last_redirected_url: str | None
     har: dict[str, Any] | None
-    cookies: list[dict[str, str]] | None
+    cookies: list[Cookie] | None
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
@@ -63,7 +77,7 @@ class CaptureResponseJson(TypedDict, total=False):
     status: int
     last_redirected_url: str | None
     har: dict[str, Any] | None
-    cookies: list[dict[str, str]] | None
+    cookies: list[Cookie] | None
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
@@ -86,7 +100,7 @@ class CaptureSettings(TypedDict, total=False):
     user_agent: str | None
     proxy: str | dict[str, str] | None
     general_timeout_in_sec: int | None
-    cookies: str | dict[str, str] | list[Cookie] | list[dict[str, Any]] | None
+    cookies: str | list[SetCookieParam] | list[dict[str, Any]] | None
     storage: str | dict[str, Any] | None
     headers: str | dict[str, str] | None
     http_credentials: dict[str, str] | None
@@ -163,7 +177,7 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[SetCookieParam] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
@@ -197,7 +211,7 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[SetCookieParam] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | None=None,
