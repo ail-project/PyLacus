@@ -5,10 +5,9 @@ import time
 import unittest
 
 from datetime import datetime
-from typing import Any
 
 from pylacus import PyLacus
-from pylacus.api import CaptureStatus
+from pylacus.api import CaptureStatus, Cookie
 
 
 class TestBasic(unittest.TestCase):
@@ -58,10 +57,10 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(response['cookies'][0]['domain'], 'circl.lu')
         self.assertEqual(response['cookies'], response['storage']['cookies'])
 
-        cookie_from_capture: dict[str, Any] = response['cookies'][0]
+        cookie_from_capture: Cookie = response['cookies'][0]
         expires = datetime.now().timestamp() + 3600
         cookie_from_capture['expires'] = expires
-        uuid = self.client.enqueue(url="circl.lu", cookies=cookie_from_capture, max_retries=0)
+        uuid = self.client.enqueue(url="circl.lu", cookies=[cookie_from_capture], max_retries=0)
         while True:
             status = self.client.get_capture_status(uuid)
             if status == CaptureStatus.DONE:
@@ -73,7 +72,7 @@ class TestBasic(unittest.TestCase):
         self.assertEqual(response['cookies'][0]['expires'], expires)
 
         # Send list
-        cookies_from_capture: list[dict[str, Any]] = response['cookies']
+        cookies_from_capture: list[Cookie] = response['cookies']
         expires = datetime.now().timestamp() + 4000
         cookies_from_capture[0]['expires'] = expires
         uuid = self.client.enqueue(url="circl.lu", cookies=cookies_from_capture, max_retries=0)
