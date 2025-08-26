@@ -1,6 +1,6 @@
 [project]
 name = "pylacus"
-version = "1.16.1"
+version = "1.17.0"
 description = "Python CLI and module for lacus"
 authors = [
     {name="Raphaël Vinot", email="raphael.vinot@circl.lu"}
@@ -14,7 +14,7 @@ requires-python = ">=3.9"
 dynamic = ["classifiers"]
 
 dependencies = [
-    "requests (>=2.32.4)"
+    "requests (>=2.32.5)"
 ]
 
 [tool.poetry]
@@ -36,8 +36,8 @@ pylacus = 'pylacus:main'
 docs = ["Sphinx (>=8.2.3) ; python_version >= \"3.11\""]
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.17.0"
-types-requests = "^2.32.4.20250611"
+mypy = "^1.17.1"
+types-requests = "^2.32.4.20250809"
 pytest = "^8.4.1"
 
 [build-system]
