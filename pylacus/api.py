@@ -69,6 +69,7 @@ class CaptureResponse(TypedDict, total=False):
     children: list[Any] | None
     runtime: float | None
     potential_favicons: set[bytes] | None
+    trusted_timestamps: dict[str, str] | None
 
 
 class CaptureResponseJson(TypedDict, total=False):
@@ -113,6 +114,7 @@ class CaptureSettings(TypedDict, total=False):
     referer: str | None
     with_screenshot: bool
     with_favicon: bool
+    with_trusted_timestamps: bool
     allow_tracking: bool
     headless: bool
     init_script: str
@@ -190,6 +192,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
+                with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
                 init_script: str | None=None,
@@ -224,6 +227,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
+                with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
                 init_script: str | None=None,
@@ -240,7 +244,8 @@ class PyLacus():
             to_enqueue = settings
         else:
             to_enqueue = {'depth': depth, 'java_script_enabled': java_script_enabled,
-                          'with_favicon': with_favicon, 'allow_tracking': allow_tracking,
+                          'with_favicon': with_favicon, 'with_trusted_timestamps': with_trusted_timestamps,
+                          'allow_tracking': allow_tracking,
                           'headless': headless, 'with_screenshot': with_screenshot,
                           'rendered_hostname_only': rendered_hostname_only,
                           'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
