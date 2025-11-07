@@ -44,6 +44,14 @@ class SetCookieParam(TypedDict, total=False):
     partitionKey: str
 
 
+class FramesResponse(TypedDict, total=False):
+
+    name: str
+    url: str
+    content: str | None
+    children: list[FramesResponse] | None
+
+
 @unique
 class CaptureStatus(IntEnum):
     '''The status of the capture'''
@@ -63,6 +71,7 @@ class CaptureResponse(TypedDict, total=False):
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
+    frames: FramesResponse | None
     png: bytes | None
     downloaded_filename: str | None
     downloaded_file: bytes | None
@@ -82,12 +91,14 @@ class CaptureResponseJson(TypedDict, total=False):
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
+    frames: FramesResponse | None
     png: str | None
     downloaded_filename: str | None
     downloaded_file: str | None
     children: list[Any] | None
     runtime: float | None
     potential_favicons: list[str] | None
+    trusted_timestamps: dict[str, str] | None
 
 
 class CaptureSettings(TypedDict, total=False):
