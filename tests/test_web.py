@@ -20,6 +20,11 @@ class TestBasic(unittest.TestCase):
         self.assertTrue(self.client.is_up)
         self.assertFalse(self.client.is_busy())
 
+    def test_playwright_devices(self) -> None:
+        devices = self.client.playwright_devices()
+        # check expected keys are there
+        self.assertTrue(devices.get('desktop').get('default').get('Desktop Firefox'))
+
     def test_submit(self) -> None:
         uuid = self.client.enqueue(url="circl.lu", max_retries=0)
         while True:
