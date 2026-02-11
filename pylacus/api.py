@@ -132,6 +132,7 @@ class CaptureSettings(TypedDict, total=False):
 
     force: bool | None
     recapture_interval: int | None
+    final_wait: int | None
     priority: int | None
     max_retries: int | None
     uuid: str | None
@@ -210,6 +211,7 @@ class PyLacus():
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
+                final_wait: int=5,
                 priority: int=0,
                 max_retries: int | None=None,
                 uuid: str | None=None,
@@ -245,6 +247,7 @@ class PyLacus():
                 rendered_hostname_only: bool=True,
                 force: bool=False,
                 recapture_interval: int=300,
+                final_wait: int=5,
                 priority: int=0,
                 max_retries: int | None=None,
                 uuid: str | None=None,
@@ -259,7 +262,8 @@ class PyLacus():
                           'allow_tracking': allow_tracking,
                           'headless': headless, 'with_screenshot': with_screenshot,
                           'rendered_hostname_only': rendered_hostname_only,
-                          'force': force, 'recapture_interval': recapture_interval, 'priority': priority}
+                          'force': force, 'recapture_interval': recapture_interval, 'priority': priority,
+                          'final_wait': final_wait}
             if url:
                 to_enqueue['url'] = url
             elif document_name and document:
