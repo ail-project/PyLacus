@@ -12,36 +12,14 @@ from urllib.parse import urljoin, urlparse
 
 import requests
 
+from pydantic import ValidationError
 from urllib3.util import Retry
 from requests.adapters import HTTPAdapter
 
+from lookyloo_models import (Cookie, CaptureSettings, HttpCredentialsSettings,
+                             GeolocationSettings, ViewportSettings, CaptureSettingsError)
+
 BROWSER = Literal['chromium', 'firefox', 'webkit']
-
-
-# Clone of the TypedDict from Playwright to keep it consistent with LacusCore
-class Cookie(TypedDict, total=False):
-    name: str
-    value: str
-    domain: str
-    path: str
-    expires: float
-    httpOnly: bool
-    secure: bool
-    sameSite: Literal["Lax", "None", "Strict"]
-    partitionKey: str
-
-
-class SetCookieParam(TypedDict, total=False):
-    name: str
-    value: str
-    url: str
-    domain: str
-    path: str
-    expires: float
-    httpOnly: bool
-    secure: bool
-    sameSite: Literal["Lax", "None", "Strict"]
-    partitionKey: str
 
 
 class FramesResponse(TypedDict, total=False):
@@ -101,46 +79,6 @@ class CaptureResponseJson(TypedDict, total=False):
     trusted_timestamps: dict[str, str] | None
 
 
-class CaptureSettings(TypedDict, total=False):
-    '''The capture settings that can be passed to Lacus.'''
-
-    url: str | None
-    document_name: str | None
-    document: str | None
-    browser: Literal['chromium', 'firefox', 'webkit'] | None
-    device_name: str | None
-    user_agent: str | None
-    proxy: str | dict[str, str] | None
-    general_timeout_in_sec: int | None
-    cookies: str | dict[str, str] | list[SetCookieParam] | list[Cookie] | list[dict[str, Any]] | None
-    storage: str | dict[str, Any] | None
-    headers: str | dict[str, str] | None
-    http_credentials: dict[str, str] | None
-    geolocation: dict[str, str | int | float] | None
-    timezone_id: str | None
-    locale: str | None
-    color_scheme: str | None
-    java_script_enabled: bool
-    viewport: dict[str, int | str] | None
-    referer: str | None
-    with_screenshot: bool
-    with_favicon: bool
-    with_trusted_timestamps: bool
-    allow_tracking: bool
-    headless: bool
-    init_script: str
-
-    force: bool | None
-    recapture_interval: int | None
-    final_wait: int | None
-    priority: int | None
-    max_retries: int | None
-    uuid: str | None
-
-    depth: int
-    rendered_hostname_only: bool  # Note: only used if depth is > 0
-
-
 class PyLacus():
 
     def __init__(self, root_url: str, useragent: str | None=None,
@@ -179,7 +117,7 @@ class PyLacus():
         return r.json()
 
     @overload
-    def enqueue(self, *, settings: CaptureSettings | None=None) -> str:
+    def enqueue(self, *, settings: CaptureSettings | dict[str, Any] | None=None) -> str:
         ...
 
     @overload
@@ -191,16 +129,16 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | list[SetCookieParam] | list[Cookie] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
-                http_credentials: dict[str, str] | None=None,
-                geolocation: dict[str, str | int | float] | None=None,
+                http_credentials: dict[str, str] | HttpCredentialsSettings | None=None,
+                geolocation: dict[str, str | int | float] | GeolocationSettings | None=None,
                 timezone_id: str | None=None,
                 locale: str | None=None,
-                color_scheme: str | None=None,
+                color_scheme: Literal['dark', 'light', 'no-preference', 'null'] | None=None,
                 java_script_enabled: bool=True,
-                viewport: dict[str, str | int] | None=None,
+                viewport: dict[str, int | str] | ViewportSettings | None=None,
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
@@ -219,7 +157,7 @@ class PyLacus():
         ...
 
     def enqueue(self, *,
-                settings: CaptureSettings | None=None,
+                settings: CaptureSettings | dict[str, Any] | None=None,
                 url: str | None=None,
                 document_name: str | None=None, document: str | None=None,
                 depth: int=0,
@@ -227,16 +165,16 @@ class PyLacus():
                 user_agent: str | None=None,
                 proxy: str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
-                cookies: str | dict[str, str] | list[dict[str, Any]] | list[SetCookieParam] | list[Cookie] | None=None,
+                cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
                 storage: str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
-                http_credentials: dict[str, str] | None=None,
-                geolocation: dict[str, str | int | float] | None=None,
+                http_credentials: dict[str, str] | HttpCredentialsSettings | None=None,
+                geolocation: dict[str, str | int | float] | GeolocationSettings | None=None,
                 timezone_id: str | None=None,
                 locale: str | None=None,
-                color_scheme: str | None=None,
+                color_scheme: Literal['dark', 'light', 'no-preference', 'null'] | None=None,
                 java_script_enabled: bool=True,
-                viewport: dict[str, str | int] | None=None,
+                viewport: dict[str, str | int] | ViewportSettings | None=None,
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
@@ -253,60 +191,34 @@ class PyLacus():
                 uuid: str | None=None,
                 ) -> str:
         '''Submit a new capture. Pass a typed dictionary or any of the relevant settings, get the UUID.'''
-        to_enqueue: CaptureSettings
-        if settings:
-            to_enqueue = settings
+        if not settings:
+            settings = {'depth': depth, 'rendered_hostname_only': rendered_hostname_only,
+                        'url': url, 'document_name': document_name, 'document': document,
+                        'browser': browser, 'device_name': device_name,
+                        'user_agent': user_agent, 'proxy': proxy,
+                        'general_timeout_in_sec': general_timeout_in_sec,
+                        'cookies': cookies, 'storage': storage, 'headers': headers,
+                        'http_credentials': http_credentials, 'geolocation': geolocation,
+                        'timezone_id': timezone_id, 'locale': locale,
+                        'color_scheme': color_scheme, 'java_script_enabled': java_script_enabled,
+                        'viewport': viewport, 'referer': referer,
+                        'with_screenshot': with_screenshot, 'with_favicon': with_favicon,
+                        'with_trusted_timestamps': with_trusted_timestamps,
+                        'allow_tracking': allow_tracking, 'final_wait': final_wait,
+                        'headless': headless, 'init_script': init_script,
+                        'max_retries': max_retries, 'force': force,
+                        'recapture_interval': recapture_interval,
+                        'priority': priority, 'uuid': uuid
+                        }
+        if isinstance(settings, dict):
+            try:
+                to_enqueue = CaptureSettings(**settings)
+            except ValidationError as e:
+                raise CaptureSettingsError('Invalid settings', e)
         else:
-            to_enqueue = {'depth': depth, 'java_script_enabled': java_script_enabled,
-                          'with_favicon': with_favicon, 'with_trusted_timestamps': with_trusted_timestamps,
-                          'allow_tracking': allow_tracking,
-                          'headless': headless, 'with_screenshot': with_screenshot,
-                          'rendered_hostname_only': rendered_hostname_only,
-                          'force': force, 'recapture_interval': recapture_interval, 'priority': priority,
-                          'final_wait': final_wait}
-            if url:
-                to_enqueue['url'] = url
-            elif document_name and document:
-                to_enqueue['document_name'] = document_name
-                to_enqueue['document'] = document
-            if browser:
-                to_enqueue['browser'] = browser
-            if device_name:
-                to_enqueue['device_name'] = device_name
-            if user_agent:
-                to_enqueue['user_agent'] = user_agent
-            if proxy:
-                to_enqueue['proxy'] = proxy
-            if general_timeout_in_sec is not None:  # that would be a terrible idea, but this one could be 0
-                to_enqueue['general_timeout_in_sec'] = general_timeout_in_sec
-            if cookies:
-                to_enqueue['cookies'] = cookies
-            if storage:
-                to_enqueue['storage'] = storage
-            if headers:
-                to_enqueue['headers'] = headers
-            if http_credentials:
-                to_enqueue['http_credentials'] = http_credentials
-            if geolocation:
-                to_enqueue['geolocation'] = geolocation
-            if timezone_id:
-                to_enqueue['timezone_id'] = timezone_id
-            if locale:
-                to_enqueue['locale'] = locale
-            if color_scheme:
-                to_enqueue['color_scheme'] = color_scheme
-            if viewport:
-                to_enqueue['viewport'] = viewport
-            if referer:
-                to_enqueue['referer'] = referer
-            if max_retries is not None:
-                to_enqueue['max_retries'] = max_retries
-            if uuid:
-                to_enqueue['uuid'] = uuid
-            if init_script:
-                to_enqueue['init_script'] = init_script
+            to_enqueue = settings
 
-        r = self.session.post(urljoin(self.root_url, 'enqueue'), json=to_enqueue)
+        r = self.session.post(urljoin(self.root_url, 'enqueue'), data=to_enqueue.model_dump_json())
         return r.json()
 
     def get_capture_status(self, uuid: str) -> CaptureStatus:

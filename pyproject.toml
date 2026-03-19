@@ -1,6 +1,6 @@
 [project]
 name = "pylacus"
-version = "1.21.3"
+version = "1.22.0"
 description = "Python CLI and module for lacus"
 authors = [
     {name="Raphaël Vinot", email="raphael.vinot@circl.lu"}
@@ -9,12 +9,13 @@ license = "BSD-3-Clause"
 repository = "https://github.com/ail-project/PyLacus"
 documentation = "https://pylacus.readthedocs.io/en/latest/"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.15"
 
 dynamic = ["classifiers"]
 
 dependencies = [
-    "requests (>=2.32.5)"
+    "requests (>=2.32.5)",
+    "lookyloo-models (>=0.1.0,<0.2.0)"
 ]
 
 [tool.poetry]

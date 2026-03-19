@@ -6,14 +6,13 @@ import sys
 
 from typing import Any
 
-from .api import PyLacus, CaptureStatus, CaptureResponse, CaptureResponseJson, CaptureSettings  # noqa
+from .api import PyLacus, CaptureStatus, CaptureResponse, CaptureResponseJson  # noqa
 
 __all__ = [
     'PyLacus',
     'CaptureStatus',
     'CaptureResponse',
     'CaptureResponseJson',
-    'CaptureSettings',
 ]
 
 

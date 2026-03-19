@@ -6,8 +6,9 @@ import unittest
 
 from datetime import datetime
 
+from lookyloo_models import Cookie
 from pylacus import PyLacus
-from pylacus.api import CaptureStatus, Cookie
+from pylacus.api import CaptureStatus
 
 
 class TestBasic(unittest.TestCase):
@@ -59,12 +60,12 @@ class TestBasic(unittest.TestCase):
         if not response['storage'] or 'cookies' not in response['storage']:
             self.fail("No storage found")
         self.assertEqual(len(response['cookies']), 1)
-        self.assertEqual(response['cookies'][0]['domain'], 'circl.lu')
+        self.assertEqual(response['cookies'][0].domain, 'circl.lu')
         self.assertEqual(response['cookies'], response['storage']['cookies'])
 
         cookie_from_capture: Cookie = response['cookies'][0]
         expires = datetime.now().timestamp() + 3600
-        cookie_from_capture['expires'] = expires
+        cookie_from_capture.expires = expires
         uuid = self.client.enqueue(url="circl.lu", cookies=[cookie_from_capture], max_retries=0)
         while True:
             status = self.client.get_capture_status(uuid)
@@ -74,12 +75,12 @@ class TestBasic(unittest.TestCase):
         response = self.client.get_capture(uuid)
         if not response['cookies']:
             self.fail("No cookies found")
-        self.assertEqual(response['cookies'][0]['expires'], expires)
+        self.assertEqual(response['cookies'][0].expires, expires)
 
         # Send list
         cookies_from_capture: list[Cookie] = response['cookies']
         expires = datetime.now().timestamp() + 4000
-        cookies_from_capture[0]['expires'] = expires
+        cookies_from_capture[0].expires = expires
         uuid = self.client.enqueue(url="circl.lu", cookies=cookies_from_capture, max_retries=0)
         while True:
             status = self.client.get_capture_status(uuid)
@@ -89,7 +90,7 @@ class TestBasic(unittest.TestCase):
         response = self.client.get_capture(uuid)
         if not response['cookies']:
             self.fail("No cookies found")
-        self.assertEqual(response['cookies'][0]['expires'], expires)
+        self.assertEqual(response['cookies'][0].expires, expires)
 
         # Send list as json
         cookies_from_capture = response['cookies']
@@ -101,7 +102,7 @@ class TestBasic(unittest.TestCase):
             time.sleep(5)
         response = self.client.get_capture(uuid)
         if response['cookies']:
-            self.assertEqual(response['cookies'][0]['expires'], expires, response['cookies'])
+            self.assertEqual(response['cookies'][0].expires, expires, response['cookies'])
 
     def test_submit_storage(self) -> None:
         uuid = self.client.enqueue(url="https://mdn.github.io/dom-examples/web-storage/",
