@@ -5,7 +5,11 @@ import json
 import sys
 
 from typing import Any, TypedDict, Literal
-from warnings import deprecated
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from deprecated import deprecated
 
 from .api import PyLacus, CaptureStatus, CaptureResponse, CaptureResponseJson  # noqa
 
