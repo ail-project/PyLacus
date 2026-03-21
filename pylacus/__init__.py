@@ -4,15 +4,59 @@ import argparse
 import json
 import sys
 
-from typing import Any
+from typing import Any, TypedDict, Literal
+from warnings import deprecated
 
 from .api import PyLacus, CaptureStatus, CaptureResponse, CaptureResponseJson  # noqa
+
+
+@deprecated("Use lookyloo-models instead, the Pydantic models.")
+class CaptureSettings(TypedDict, total=False):
+    '''The capture settings that can be passed to Lacus.'''
+
+    url: str | None
+    document_name: str | None
+    document: str | None
+    browser: Literal['chromium', 'firefox', 'webkit'] | None
+    device_name: str | None
+    user_agent: str | None
+    proxy: str | dict[str, str] | None
+    general_timeout_in_sec: int | None
+    cookies: str | dict[str, str] | list[dict[str, Any]] | None
+    storage: str | dict[str, Any] | None
+    headers: str | dict[str, str] | None
+    http_credentials: dict[str, str] | None
+    geolocation: dict[str, str | int | float] | None
+    timezone_id: str | None
+    locale: str | None
+    color_scheme: str | None
+    java_script_enabled: bool
+    viewport: dict[str, int | str] | None
+    referer: str | None
+    with_screenshot: bool
+    with_favicon: bool
+    with_trusted_timestamps: bool
+    allow_tracking: bool
+    headless: bool
+    init_script: str
+
+    force: bool | None
+    recapture_interval: int | None
+    final_wait: int | None
+    priority: int | None
+    max_retries: int | None
+    uuid: str | None
+
+    depth: int
+    rendered_hostname_only: bool  # Note: only used if depth is > 0
+
 
 __all__ = [
     'PyLacus',
     'CaptureStatus',
     'CaptureResponse',
     'CaptureResponseJson',
+    'CaptureSettings'
 ]
 
 
