@@ -217,8 +217,7 @@ class PyLacus():
                 raise CaptureSettingsError('Invalid settings', e)
         else:
             to_enqueue = settings
-
-        r = self.session.post(urljoin(self.root_url, 'enqueue'), data=to_enqueue.model_dump_json())
+        r = self.session.post(urljoin(self.root_url, 'enqueue'), data=to_enqueue.model_dump_json(exclude_none=True))
         return r.json()
 
     def get_capture_status(self, uuid: str) -> CaptureStatus:
