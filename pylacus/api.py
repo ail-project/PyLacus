@@ -45,7 +45,7 @@ class CaptureResponse(TypedDict, total=False):
     status: int
     last_redirected_url: str | None
     har: dict[str, Any] | None
-    cookies: list[Cookie] | None
+    cookies: list[dict[str, Any]] | None
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
@@ -65,7 +65,7 @@ class CaptureResponseJson(TypedDict, total=False):
     status: int
     last_redirected_url: str | None
     har: dict[str, Any] | None
-    cookies: list[Cookie] | None
+    cookies: list[dict[str, Any]] | None
     storage: dict[str, Any] | None
     error: str | None
     html: str | None
