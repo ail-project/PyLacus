@@ -48,7 +48,7 @@ class TestBasic(unittest.TestCase):
 
     def test_submit_cookies(self) -> None:
         # Very basic cookie
-        uuid = self.client.enqueue(url="https://circl.lu", cookies="{\"test\": \"test\"}", max_retries=0)
+        uuid = self.client.enqueue(url="circl.lu", cookies="{\"test\": \"test\"}", max_retries=0)
         while True:
             status = self.client.get_capture_status(uuid)
             if status == CaptureStatus.DONE:
