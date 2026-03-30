@@ -212,7 +212,7 @@ class PyLacus():
                         }
         if isinstance(settings, dict):
             try:
-                to_enqueue = CaptureSettings(**settings)
+                to_enqueue = CaptureSettings.model_validate(settings)
             except ValidationError as e:
                 raise CaptureSettingsError('Invalid settings', e)
         else:
