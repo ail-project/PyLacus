@@ -22,6 +22,30 @@ from lookyloo_models import (Cookie, CaptureSettings, HttpCredentialsSettings,
 BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 
+@unique
+class SessionStatus(IntEnum):
+    '''The status of an interactive session'''
+    UNKNOWN = -1
+    STARTING = 0
+    READY = 1
+    ERROR = 2
+    STOPPED = 3
+    EXPIRED = 4
+    CAPTURE_REQUESTED = 5
+
+
+class InteractiveSessionResponse(TypedDict, total=False):
+    '''Response from the interactive session status and finish endpoints.'''
+    uuid: str
+    status: str
+    raw_status: int
+    finish_requested: bool
+    view_url: str | None
+    created_at: int
+    expires_at: int
+    error: str | None
+
+
 class FramesResponse(TypedDict, total=False):
 
     name: str
@@ -145,6 +169,8 @@ class PyLacus():
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
+                interactive: bool=False,
+                interactive_ttl: int=600,
                 init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
@@ -181,6 +207,8 @@ class PyLacus():
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
+                interactive: bool=False,
+                interactive_ttl: int=600,
                 init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
@@ -205,7 +233,9 @@ class PyLacus():
                         'with_screenshot': with_screenshot, 'with_favicon': with_favicon,
                         'with_trusted_timestamps': with_trusted_timestamps,
                         'allow_tracking': allow_tracking, 'final_wait': final_wait,
-                        'headless': headless, 'init_script': init_script,
+                        'headless': headless, 'interactive': interactive,
+                        'interactive_ttl': interactive_ttl,
+                        'init_script': init_script,
                         'max_retries': max_retries, 'force': force,
                         'recapture_interval': recapture_interval,
                         'priority': priority, 'uuid': uuid
@@ -223,6 +253,16 @@ class PyLacus():
     def get_capture_status(self, uuid: str) -> CaptureStatus:
         '''Get the status of the capture.'''
         r = self.session.get(urljoin(self.root_url, str(PurePosixPath('capture_status', uuid))))
+        return r.json()
+
+    def get_interactive_session(self, uuid: str) -> InteractiveSessionResponse:
+        '''Get the status and public view details for an interactive capture session.'''
+        r = self.session.get(urljoin(self.root_url, str(PurePosixPath('interactive', uuid))))
+        return r.json()
+
+    def request_interactive_capture(self, uuid: str) -> InteractiveSessionResponse:
+        '''Request a final capture of the current page for an interactive session.'''
+        r = self.session.post(urljoin(self.root_url, str(PurePosixPath('interactive', uuid, 'finish'))))
         return r.json()
 
     def _decode_response(self, capture: CaptureResponseJson) -> CaptureResponse:
