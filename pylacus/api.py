@@ -24,7 +24,7 @@ BROWSER = Literal['chromium', 'firefox', 'webkit']
 
 @unique
 class SessionStatus(IntEnum):
-    '''The status of an interactive session'''
+    '''The status of an remote headed session'''
     UNKNOWN = -1
     STARTING = 0
     READY = 1
@@ -34,8 +34,8 @@ class SessionStatus(IntEnum):
     CAPTURE_REQUESTED = 5
 
 
-class InteractiveSessionResponse(TypedDict, total=False):
-    '''Response from the interactive session status and finish endpoints.'''
+class RemoteHeadedSessionResponse(TypedDict, total=False):
+    '''Response from the remote headed session status and finish endpoints.'''
     uuid: str
     status: str
     raw_status: int
@@ -169,8 +169,7 @@ class PyLacus():
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
-                interactive: bool=False,
-                interactive_ttl: int=600,
+                remote_headfull: bool=False,
                 init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
@@ -207,8 +206,7 @@ class PyLacus():
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
-                interactive: bool=False,
-                interactive_ttl: int=600,
+                remote_headfull: bool=False,
                 init_script: str | None=None,
                 rendered_hostname_only: bool=True,
                 force: bool=False,
@@ -233,8 +231,7 @@ class PyLacus():
                         'with_screenshot': with_screenshot, 'with_favicon': with_favicon,
                         'with_trusted_timestamps': with_trusted_timestamps,
                         'allow_tracking': allow_tracking, 'final_wait': final_wait,
-                        'headless': headless, 'interactive': interactive,
-                        'interactive_ttl': interactive_ttl,
+                        'headless': headless, 'remote_headfull': remote_headfull,
                         'init_script': init_script,
                         'max_retries': max_retries, 'force': force,
                         'recapture_interval': recapture_interval,
@@ -255,13 +252,13 @@ class PyLacus():
         r = self.session.get(urljoin(self.root_url, str(PurePosixPath('capture_status', uuid))))
         return r.json()
 
-    def get_interactive_session(self, uuid: str) -> InteractiveSessionResponse:
-        '''Get the status and public view details for an interactive capture session.'''
+    def get_remote_headed_session(self, uuid: str) -> RemoteHeadedSessionResponse:
+        '''Get the status and public view details for a remote headfull capture session.'''
         r = self.session.get(urljoin(self.root_url, str(PurePosixPath('interactive', uuid))))
         return r.json()
 
-    def request_interactive_capture(self, uuid: str) -> InteractiveSessionResponse:
-        '''Request a final capture of the current page for an interactive session.'''
+    def finish_remote_headed_session(self, uuid: str) -> RemoteHeadedSessionResponse:
+        '''Request a final capture of the current page for a remote headed session.'''
         r = self.session.post(urljoin(self.root_url, str(PurePosixPath('interactive', uuid, 'finish'))))
         return r.json()
 

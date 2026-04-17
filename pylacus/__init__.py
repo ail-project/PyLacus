@@ -11,7 +11,7 @@ if sys.version_info >= (3, 13):
 else:
     from deprecated import deprecated
 
-from .api import PyLacus, CaptureStatus, SessionStatus, CaptureResponse, CaptureResponseJson, InteractiveSessionResponse  # noqa
+from .api import PyLacus, CaptureStatus, SessionStatus, CaptureResponse, CaptureResponseJson, RemoteHeadedSessionResponse  # noqa
 
 
 @deprecated("Use lookyloo-models instead, the Pydantic models.")
@@ -42,8 +42,7 @@ class CaptureSettings(TypedDict, total=False):
     with_trusted_timestamps: bool
     allow_tracking: bool
     headless: bool
-    interactive: bool
-    interactive_ttl: int
+    remote_headfull: bool
     init_script: str
 
     force: bool | None
@@ -63,7 +62,7 @@ __all__ = [
     'SessionStatus',
     'CaptureResponse',
     'CaptureResponseJson',
-    'InteractiveSessionResponse',
+    'RemoteHeadedSessionResponse',
     'CaptureSettings'
 ]
 
