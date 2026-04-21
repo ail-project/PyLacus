@@ -356,3 +356,8 @@ class PyLacus():
         '''Get the proxies enabled on the instance.'''
         r = self.session.get(urljoin(self.root_url, 'playwright_devices'))
         return r.json()
+
+    def settings(self) -> dict[str, str | bool | int]:
+        """The public settings for the instance"""
+        r = self.session.get(urljoin(self.root_url, 'settings'))
+        return r.json()
