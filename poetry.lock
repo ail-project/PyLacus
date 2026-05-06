@@ -441,14 +441,14 @@ files = [
 
 [[package]]
 name = "lookyloo-models"
-version = "0.2.6"
+version = "0.2.7"
 description = "All the Pydantic models used across Lookyloo"
 optional = false
 python-versions = "<4,>=3.10"
 groups = ["main"]
 files = [
-    {file = "lookyloo_models-0.2.6-py3-none-any.whl", hash = "sha256:894f5e674c4e3f9aeb659d6b900360a8f2a87b37c1877f8e88e74a649acd0518"},
-    {file = "lookyloo_models-0.2.6.tar.gz", hash = "sha256:0c9840342a3f6d25e6470d2ec5f836dee1427aff7e4ff17be6d8d418eee9a770"},
+    {file = "lookyloo_models-0.2.7-py3-none-any.whl", hash = "sha256:3a0bf96a70d3effabb215c1fba5a03896f5274ec748194f2d2179cf41691e181"},
+    {file = "lookyloo_models-0.2.7.tar.gz", hash = "sha256:e3e9649e37d8ded39599b8a393d20b768ee41828375cf1478f6f8eebdb26ac84"},
 ]
 
 [package.dependencies]
@@ -1657,4 +1657,4 @@ docs = ["sphinx"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<3.15"
-content-hash = "cd9113ab5edbd313957d2bfacc19fbe0138fc925c0d25a0a16b0429984025d45"
+content-hash = "8177e7c205c0fee9ddd40ecf5f758e54a5e237f6e87bb1ccfae2ec0184c44b48"
