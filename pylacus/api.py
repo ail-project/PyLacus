@@ -81,6 +81,7 @@ class CaptureResponse(TypedDict, total=False):
     runtime: float | None
     potential_favicons: set[bytes] | None
     trusted_timestamps: dict[str, str] | None
+    console_messages: list[dict[str, str | int | float]] | None
 
 
 class CaptureResponseJson(TypedDict, total=False):
@@ -101,6 +102,7 @@ class CaptureResponseJson(TypedDict, total=False):
     runtime: float | None
     potential_favicons: list[str] | None
     trusted_timestamps: dict[str, str] | None
+    console_messages: list[dict[str, str | int | float]] | None
 
 
 class PyLacus():
