@@ -17,7 +17,8 @@ from urllib3.util import Retry
 from requests.adapters import HTTPAdapter
 
 from lookyloo_models import (Cookie, CaptureSettings, HttpCredentialsSettings,
-                             GeolocationSettings, ViewportSettings, CaptureSettingsError)
+                             GeolocationSettings, ViewportSettings, CaptureSettingsError,
+                             ProxySettings, StorageStateSettings)
 
 BROWSER = Literal['chromium', 'firefox', 'webkit']
 
@@ -153,10 +154,10 @@ class PyLacus():
                 depth: int=0,
                 browser: BROWSER | None=None, device_name: str | None=None,
                 user_agent: str | None=None,
-                proxy: str | dict[str, str] | None=None,
+                proxy: ProxySettings | str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
                 cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
-                storage: str | dict[str, Any] | None=None,
+                storage: StorageStateSettings | str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | HttpCredentialsSettings | None=None,
                 geolocation: dict[str, str | int | float] | GeolocationSettings | None=None,
@@ -190,10 +191,10 @@ class PyLacus():
                 depth: int=0,
                 browser: BROWSER | None=None, device_name: str | None=None,
                 user_agent: str | None=None,
-                proxy: str | dict[str, str] | None=None,
+                proxy: ProxySettings | str | dict[str, str] | None=None,
                 general_timeout_in_sec: int | None=None,
                 cookies: str | dict[str, str] | list[dict[str, Any]] | list[Cookie] | None=None,
-                storage: str | dict[str, Any] | None=None,
+                storage: StorageStateSettings | str | dict[str, Any] | None=None,
                 headers: str | dict[str, str] | None=None,
                 http_credentials: dict[str, str] | HttpCredentialsSettings | None=None,
                 geolocation: dict[str, str | int | float] | GeolocationSettings | None=None,
