@@ -78,6 +78,8 @@ class CaptureResponse(TypedDict, total=False):
     png: bytes | None
     downloaded_filename: str | None
     downloaded_file: bytes | None
+    video_filename: str | None
+    video_file: bytes | None
     children: list[Any] | None
     runtime: float | None
     potential_favicons: set[bytes] | None
@@ -99,6 +101,8 @@ class CaptureResponseJson(TypedDict, total=False):
     png: str | None
     downloaded_filename: str | None
     downloaded_file: str | None
+    video_filename: str | None
+    video_file: str | None
     children: list[Any] | None
     runtime: float | None
     potential_favicons: list[str] | None
@@ -169,6 +173,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
+                with_video: bool=False,
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
@@ -206,6 +211,7 @@ class PyLacus():
                 referer: str | None=None,
                 with_screenshot: bool=True,
                 with_favicon: bool=False,
+                with_video: bool=False,
                 with_trusted_timestamps: bool=False,
                 allow_tracking: bool=False,
                 headless: bool=True,
@@ -232,6 +238,7 @@ class PyLacus():
                         'color_scheme': color_scheme, 'java_script_enabled': java_script_enabled,
                         'viewport': viewport, 'referer': referer,
                         'with_screenshot': with_screenshot, 'with_favicon': with_favicon,
+                        'with_video': with_video,
                         'with_trusted_timestamps': with_trusted_timestamps,
                         'allow_tracking': allow_tracking, 'final_wait': final_wait,
                         'headless': headless, 'remote_headfull': remote_headfull,
@@ -271,6 +278,8 @@ class PyLacus():
             decoded_capture['png'] = b64decode(capture['png'])
         if capture.get('downloaded_file') and capture['downloaded_file']:
             decoded_capture['downloaded_file'] = b64decode(capture['downloaded_file'])
+        if capture.get('video_file') and capture['video_file']:
+            decoded_capture['video_file'] = b64decode(capture['video_file'])
         if capture.get('potential_favicons') and capture['potential_favicons']:
             decoded_capture['potential_favicons'] = {b64decode(f) for f in capture['potential_favicons']}
         if capture.get('children') and capture['children']:
@@ -287,7 +296,7 @@ class PyLacus():
         ...
 
     def get_capture(self, uuid: str, *, decode: bool=True) -> CaptureResponse | CaptureResponseJson:
-        '''Get the the capture, with the screenshot and downloaded file decoded to bytes or base64 encoded.'''
+        '''Get the the capture, with the screenshot, downloaded, and video file decoded to bytes or base64 encoded.'''
         r = self.session.get(urljoin(self.root_url, str(PurePosixPath('capture_result', uuid))))
         response: CaptureResponseJson = r.json()
         if not decode:
