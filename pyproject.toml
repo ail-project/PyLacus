@@ -1,6 +1,6 @@
 [project]
 name = "pylacus"
-version = "1.26.3"
+version = "1.27.0"
 description = "Python CLI and module for lacus"
 authors = [
     {name="Raphaël Vinot", email="raphael.vinot@circl.lu"}
